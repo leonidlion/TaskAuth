@@ -1,17 +1,17 @@
 package com.boost.leodev.socialslogin.ui.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.boost.leodev.socialslogin.R;
-import com.boost.leodev.socialslogin.Utils;
+import com.boost.leodev.socialslogin.event.EventMainChangeFragment;
 import com.boost.leodev.socialslogin.mvp.presenters.MainPresenter;
 import com.boost.leodev.socialslogin.mvp.views.MainView;
 import com.boost.leodev.socialslogin.ui.fragments.LoginFragment;
-import com.boost.leodev.socialslogin.ui.fragments.UserProfileFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView {
     @InjectPresenter
@@ -25,18 +25,29 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
+        onChangeFragment(new EventMainChangeFragment(LoginFragment.newInstance()));
+    }
 
-        if (!TextUtils.isEmpty(Utils.getUserToken(this))){
-            changeFragment(UserProfileFragment.newInstance(Utils.getUserToken(this)));
-        }else {
-            changeFragment(LoginFragment.newInstance());
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
         }
     }
 
     @Override
-    public void changeFragment(Fragment fragment) {
+    protected void onPause() {
+        super.onPause();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void onChangeFragment(EventMainChangeFragment changeFragment){
         getSupportFragmentManager().beginTransaction()
-                .replace(CONTAINER, fragment)
+                .replace(CONTAINER, changeFragment.getFragment())
                 .commit();
     }
 }
