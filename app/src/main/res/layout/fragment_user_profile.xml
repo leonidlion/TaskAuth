@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:tools="http://schemas.android.com/tools">
+
+    <include layout="@layout/toolbar"
+             android:id="@+id/toolbar_actionbar"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_profile_icon"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/ic_user_black_24dp"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        android:layout_below="@+id/toolbar_actionbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"/>
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/civ_profile_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        tools:text="Name"/>
+
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        tools:text="Email"/>
+
+    <TextView
+        android:id="@+id/user_date_birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        tools:text="Date birthday"/>
+
+    <ImageButton
+        android:id="@+id/btn_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/civ_profile_icon"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_logout_24dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:contentDescription="@string/btn_logout"/>
+</RelativeLayout>

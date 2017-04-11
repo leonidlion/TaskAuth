@@ -1,0 +1,7 @@
+<resources>
+    <string name="facebook_app_id">224564621355577</string>
+    <string name="app_name">SocialsLogin</string>
+    <string name="btn_logout">Logout</string>
+    <string name="fb_login">Facebook login</string>
+    <string name="google_login">Google login</string>
+</resources>

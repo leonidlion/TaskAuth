@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "285794545698",
+    "project_id": "socialslogin"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285794545698:android:9f467da47efbae91",
+        "android_client_info": {
+          "package_name": "com.boost.leodev.socialslogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285794545698-plqhacdj46a10oeg5rkbq8lnkjsod2de.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boost.leodev.socialslogin",
+            "certificate_hash": "e98ab0caebabc1ced85094e2527dafac4a0cb67f"
+          }
+        },
+        {
+          "client_id": "285794545698-a1kdn5257dckj40ibeh6ng9viab051kl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7sJKjO2M5EtEee_nQvl2arYGHwEcD3W4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
