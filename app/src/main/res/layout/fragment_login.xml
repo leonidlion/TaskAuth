@@ -3,41 +3,22 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/et_login"
-        android:labelFor="@id/et_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="205dp"
-        android:ems="10"
-        android:inputType="textPersonName"/>
-
-    <EditText
-        android:id="@+id/et_pass"
-        android:labelFor="@id/et_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/et_login"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:inputType="textPassword"/>
-
-    <com.facebook.login.widget.LoginButton
+    <ImageButton
         android:id="@+id/fb_login"
+        android:src="@drawable/ic_fb_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/et_pass"
-        android:layout_centerHorizontal="true"/>
+        android:layout_above="@+id/google_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        style="?attr/imageButtonStyle"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fb_login"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"/>
+        android:layout_marginBottom="53dp"/>
 </RelativeLayout>
