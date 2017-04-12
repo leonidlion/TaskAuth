@@ -7,6 +7,9 @@ import com.boost.leodev.socialslogin.mvp.models.User;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface LoginView extends MvpView {
-    void onSuccessSignIn(User user);
-    void onError(String message);
+    void startSignInGoogle();
+    void startSignInFacebook();
+    void changeFragment(User user);
+    void showError(String s);
+    void onCancel();
 }

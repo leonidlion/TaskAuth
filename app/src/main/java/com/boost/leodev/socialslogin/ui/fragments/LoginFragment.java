@@ -1,13 +1,13 @@
 package com.boost.leodev.socialslogin.ui.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -18,45 +18,42 @@ import com.boost.leodev.socialslogin.event.EventMainChangeFragment;
 import com.boost.leodev.socialslogin.mvp.models.User;
 import com.boost.leodev.socialslogin.mvp.presenters.LoginPresenter;
 import com.boost.leodev.socialslogin.mvp.views.LoginView;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class LoginFragment extends MvpAppCompatFragment implements
-        LoginView,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class LoginFragment extends MvpAppCompatFragment implements LoginView{
+    private static final int LAYOUT = R.layout.fragment_login;
 
     @InjectPresenter
     LoginPresenter mPresenter;
 
     @BindView(R.id.google_login)
     SignInButton mGoogleLogin;
+    @BindView(R.id.fb_login)
+    ImageButton mFbLogin;
+
 
     @OnClick({R.id.google_login, R.id.fb_login})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.google_login:
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(intent, Constants.GOOGLE_REQUEST_CODE);
+                mPresenter.onGoogleClick();
                 break;
             case R.id.fb_login:
+                mPresenter.onFacebookClick();
                 break;
         }
     }
-
-    private static final String TAG = "LoginFragment";
-    private static final int LAYOUT = R.layout.fragment_login;
-    private GoogleApiClient mGoogleApiClient;
 
     public static LoginFragment newInstance(){
         Bundle args = new Bundle();
@@ -65,62 +62,48 @@ public class LoginFragment extends MvpAppCompatFragment implements
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        if (mGoogleApiClient == null){
-            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(LAYOUT, container, false);
         ButterKnife.bind(this, view);
+//        mPresenter.checkIsAuth();
         return view;
+    }
+
+    @Override
+    public void startSignInGoogle(){
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mPresenter.getApiClient());
+        startActivityForResult(intent, Constants.GOOGLE_REQUEST_CODE);
+    }
+
+    @Override
+    public void startSignInFacebook(){
+        mPresenter.initFacebook();
+        LoginManager.getInstance().logInWithReadPermissions(this,
+                Arrays.asList("public_profile", "email"));
+    }
+
+    @Override
+    public void changeFragment(User user){
+        EventBus.getDefault().post(new EventMainChangeFragment(UserProfileFragment.newInstance(user)));
+    }
+
+    @Override
+    public void showError(String s) {
+        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCancel() {
+        Toast.makeText(getContext(), "Cancel", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.GOOGLE_REQUEST_CODE){
-            mPresenter.authWithGoogle(Auth.GoogleSignInApi.getSignInResultFromIntent(data));
+        if (resultCode == Activity.RESULT_OK){
+            mPresenter.onActivityResult(requestCode, resultCode, data);
         }
-        if (requestCode == Constants.FACEBOOK_REQUEST_CODE){
-            mPresenter.authWithFacebook();
-        }
-    }
-
-    @Override
-    public void onSuccessSignIn(User user) {
-        EventBus.getDefault().post(new EventMainChangeFragment(UserProfileFragment.newInstance(user)));
-    }
-
-    @Override
-    public void onError(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG, "onConnected: ");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended: ");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: ");
     }
 }
