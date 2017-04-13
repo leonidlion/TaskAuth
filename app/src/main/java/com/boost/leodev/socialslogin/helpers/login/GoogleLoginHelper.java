@@ -44,7 +44,7 @@ public class GoogleLoginHelper extends LoginHelper {
         return Constants.GOOGLE_HELPER;
     }
 
-    private User getUserFromGoogle(GoogleSignInAccount signInAccount){
+    public static User getUserFromGoogle(GoogleSignInAccount signInAccount){
         User user = new User();
         user.setName(signInAccount.getDisplayName());
         user.setEmail(signInAccount.getEmail());

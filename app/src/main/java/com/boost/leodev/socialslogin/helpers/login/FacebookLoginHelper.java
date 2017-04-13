@@ -77,7 +77,7 @@ public class FacebookLoginHelper extends LoginHelper {
         return Constants.FACEBOOK_HELPER;
     }
 
-    private User getUserFromFacebook(JSONObject object){
+    public static User getUserFromFacebook(JSONObject object){
         User user = new User();
         try {
             user.setName(object.getString("name"));

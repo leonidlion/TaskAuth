@@ -8,7 +8,6 @@ import com.boost.leodev.socialslogin.R;
 import com.boost.leodev.socialslogin.event.EventMainChangeFragment;
 import com.boost.leodev.socialslogin.mvp.presenters.MainPresenter;
 import com.boost.leodev.socialslogin.mvp.views.MainView;
-import com.boost.leodev.socialslogin.ui.fragments.LoginFragment;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView {
     @InjectPresenter
@@ -21,7 +20,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
-        changeFragment(new EventMainChangeFragment(LoginFragment.newInstance()));
+        mPresenter.checkAuthUser();
     }
 
     @Override
