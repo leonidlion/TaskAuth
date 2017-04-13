@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.boost.leodev.socialslogin.Constants;
 import com.boost.leodev.socialslogin.mvp.models.User;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -69,6 +70,11 @@ public class FacebookLoginHelper extends LoginHelper {
         if (FacebookSdk.isFacebookRequestCode(requestCode)){
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public int getSocialsId() {
+        return Constants.FACEBOOK_HELPER;
     }
 
     private User getUserFromFacebook(JSONObject object){

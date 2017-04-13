@@ -7,5 +7,5 @@ import com.boost.leodev.socialslogin.mvp.models.User;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface LoginView extends MvpView {
-    void changeFragment(User user);
+    void changeFragment(User user, int socialHelperId);
 }

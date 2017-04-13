@@ -22,4 +22,5 @@ public abstract class LoginHelper {
     public abstract void init();
     public abstract void doLogin();
     public abstract void onActivityResult(int requestCode, int resultCode, Intent data);
+    public abstract int getSocialsId();
 }

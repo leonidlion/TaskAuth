@@ -39,6 +39,11 @@ public class GoogleLoginHelper extends LoginHelper {
         }
     }
 
+    @Override
+    public int getSocialsId() {
+        return Constants.GOOGLE_HELPER;
+    }
+
     private User getUserFromGoogle(GoogleSignInAccount signInAccount){
         User user = new User();
         user.setName(signInAccount.getDisplayName());

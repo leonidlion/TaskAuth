@@ -3,26 +3,28 @@ package com.boost.leodev.socialslogin.ui.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.boost.leodev.socialslogin.R;
+import com.boost.leodev.socialslogin.event.EventMainChangeFragment;
 import com.boost.leodev.socialslogin.mvp.models.User;
 import com.boost.leodev.socialslogin.mvp.presenters.UserProfilePresenter;
 import com.boost.leodev.socialslogin.mvp.views.UserProfileView;
 import com.bumptech.glide.Glide;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
 
 public class UserProfileFragment extends MvpAppCompatFragment implements UserProfileView {
     @InjectPresenter
@@ -44,13 +46,14 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
         mPresenter.logOut();
     }
 
-    private static final String TAG = "UserProfileFragment";
     private static final int LAYOUT = R.layout.fragment_user_profile;
     private static final String ARGS_USER = "ARGS_USER";
+    private static final String ARGS_SOCIAL_HELPER = "ARGS_SOCIAL_HELPER";
 
-    public static UserProfileFragment newInstance(User user){
+    public static UserProfileFragment newInstance(User user, int socialHelper){
         Bundle args = new Bundle();
         args.putParcelable(ARGS_USER, user);
+        args.putInt(ARGS_SOCIAL_HELPER, socialHelper);
         UserProfileFragment fragment = new UserProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -62,18 +65,29 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
         View view = inflater.inflate(LAYOUT, container, false);
         ButterKnife.bind(this, view);
 
-        User user = getArguments().getParcelable(ARGS_USER);
-
-        if (user != null) {
-            mUserName.setText(user.getName());
-            mUserEmail.setText(user.getEmail());
-            mBirthDay.setText(user.getBirthDay());
-            Log.d(TAG, "onCreateView: " + user.getPhotoUri());
-            Glide.with(this)
-                    .load(Uri.parse(user.getPhotoUri()))
-                    .into(mProfileIcon);
-        }
+        mPresenter.setProfileHelper(getArguments().getInt(ARGS_SOCIAL_HELPER));
+        mPresenter.getUser((User) getArguments().getParcelable(ARGS_USER));
 
         return view;
+    }
+
+    @Override
+    public void showUserData(User user) {
+        mUserName.setText(user.getName());
+        mUserEmail.setText(user.getEmail());
+        mBirthDay.setText(user.getBirthDay());
+        Glide.with(this)
+                .load(Uri.parse(user.getPhotoUri()))
+                .into(mProfileIcon);
+    }
+
+    @Override
+    public void onLogout() {
+        EventBus.getDefault().post(new EventMainChangeFragment(LoginFragment.newInstance()));
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

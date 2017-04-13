@@ -23,6 +23,6 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     }
 
     public void onResultSuccess(User user) {
-        getViewState().changeFragment(user);
+        getViewState().changeFragment(user, mLoginHelper.getSocialsId());
     }
 }
