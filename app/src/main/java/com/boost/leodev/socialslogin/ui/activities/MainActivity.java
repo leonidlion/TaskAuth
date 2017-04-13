@@ -1,7 +1,6 @@
 package com.boost.leodev.socialslogin.ui.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -39,8 +38,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     public void changeFragment(EventMainChangeFragment changeFragment){
         getSupportFragmentManager().beginTransaction()
-                .replace(CONTAINER, changeFragment.getFragment())
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                .setCustomAnimations(R.anim.enter_anim, R.anim.exit_anim)
+                .replace(CONTAINER, changeFragment.getFragment()).commit();
     }
 }
