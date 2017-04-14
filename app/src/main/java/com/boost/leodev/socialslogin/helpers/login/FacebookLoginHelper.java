@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class FacebookLoginHelper extends LoginHelper {
     private CallbackManager mCallbackManager;
@@ -63,6 +64,7 @@ public class FacebookLoginHelper extends LoginHelper {
                 mCallback.onError(error.getMessage());
             }
         });
+        LoginManager.getInstance().logInWithPublishPermissions(mFragment, Collections.singletonList("publish_actions"));
     }
 
     @Override
