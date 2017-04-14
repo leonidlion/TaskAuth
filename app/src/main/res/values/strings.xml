@@ -9,4 +9,6 @@
     <string name="facebook_profile">Facebook profile</string>
     <string name="share_file">Share file</string>
     <string name="data_null">Invalid data</string>
+    <string name="permission_read">Allow permission for share file</string>
+    <string name="permission_setting">Settings</string>
 </resources>

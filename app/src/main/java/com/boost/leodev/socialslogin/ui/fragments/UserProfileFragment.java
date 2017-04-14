@@ -1,6 +1,8 @@
 package com.boost.leodev.socialslogin.ui.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,8 +25,21 @@ import com.boost.leodev.socialslogin.mvp.models.User;
 import com.boost.leodev.socialslogin.mvp.presenters.UserProfilePresenter;
 import com.boost.leodev.socialslogin.mvp.views.UserProfileView;
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.CompositePermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.single.SnackbarOnDeniedPermissionListener;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +74,7 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
                 mPresenter.logOut();
                 break;
             case R.id.btn_share_file:
-                mPresenter.startFilePicker();
+                checkPermission();
                 break;
         }
     }
@@ -67,6 +82,24 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     private static final int LAYOUT = R.layout.fragment_user_profile;
     private static final String ARGS_USER = "ARGS_USER";
     private static final String ARGS_SOCIAL_HELPER = "ARGS_SOCIAL_HELPER";
+
+    private ViewGroup mRootView;
+    private PermissionListener mReadExternalListener;
+    private PermissionListener mPermissionListener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted(PermissionGrantedResponse response) {
+            mPresenter.startFilePicker();
+        }
+
+        @Override
+        public void onPermissionDenied(PermissionDeniedResponse response) {
+        }
+
+        @Override
+        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+        }
+    };
+
 
     public static UserProfileFragment newInstance(User user, int socialHelper){
         Bundle args = new Bundle();
@@ -88,9 +121,31 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
         mPresenter.setProfileHelper(socialsId);
         mPresenter.getUser((User) getArguments().getParcelable(ARGS_USER));
 
+        mRootView = (ViewGroup) view;
+
         changeToolbarTitle(socialsId);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initPermissionListener();
+    }
+
+    private void initPermissionListener() {
+        mReadExternalListener = new CompositePermissionListener(mPermissionListener,
+                SnackbarOnDeniedPermissionListener.Builder.with(mRootView, R.string.permission_read)
+                        .withOpenSettingsButton(R.string.permission_setting)
+                        .build());
+    }
+
+    private void checkPermission() {
+        Dexter.withActivity(getActivity())
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(mReadExternalListener)
+                .check();
     }
 
     private void changeToolbarTitle(int socialsId){
@@ -132,10 +187,29 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.FILE_PICK_REQUEST_CODE && resultCode == RESULT_OK){
             if (data.getData() != null){
-                mPresenter.onActivityResult(data.getData().toString());
+                postFacebookPhoto(data.getData());
             }else {
                 mPresenter.showMessage(getString(R.string.data_null));
             }
+        }
+    }
+
+    private void postFacebookPhoto(Uri uri){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+            mProfileIcon.setImageBitmap(bitmap);
+            ShareDialog dialog = new ShareDialog(this);
+            if (ShareDialog.canShow(SharePhotoContent.class)){
+                SharePhoto photo = new SharePhoto.Builder()
+                        .setBitmap(bitmap)
+                        .build();
+                SharePhotoContent content = new SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+                dialog.show(content);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 
