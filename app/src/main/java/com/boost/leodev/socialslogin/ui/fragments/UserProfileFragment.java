@@ -2,10 +2,8 @@ package com.boost.leodev.socialslogin.ui.fragments;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -27,6 +25,8 @@ import com.boost.leodev.socialslogin.mvp.views.UserProfileView;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.model.ShareVideo;
+import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -38,8 +38,6 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.karumi.dexter.listener.single.SnackbarOnDeniedPermissionListener;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +80,8 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     private static final int LAYOUT = R.layout.fragment_user_profile;
     private static final String ARGS_USER = "ARGS_USER";
     private static final String ARGS_SOCIAL_HELPER = "ARGS_SOCIAL_HELPER";
+
+    private ShareDialog mShareDialog;
 
     private ViewGroup mRootView;
     private PermissionListener mReadExternalListener;
@@ -132,6 +132,7 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initPermissionListener();
+        mShareDialog = new ShareDialog(this);
     }
 
     private void initPermissionListener() {
@@ -167,8 +168,9 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
 
     @Override
     public void startFilePickerIntent(){
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent();
         intent.setType("image/* video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, Constants.FILE_PICK_REQUEST_CODE);
     }
 
@@ -188,6 +190,7 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
         if (requestCode == Constants.FILE_PICK_REQUEST_CODE && resultCode == RESULT_OK){
             if (data.getData() != null){
                 postFacebookPhoto(data.getData());
+//                postFacebookVideo(data.getData());
             }else {
                 mPresenter.showMessage(getString(R.string.data_null));
             }
@@ -195,21 +198,44 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     }
 
     private void postFacebookPhoto(Uri uri){
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-            mProfileIcon.setImageBitmap(bitmap);
-            ShareDialog dialog = new ShareDialog(this);
-            if (ShareDialog.canShow(SharePhotoContent.class)){
-                SharePhoto photo = new SharePhoto.Builder()
-                        .setBitmap(bitmap)
-                        .build();
-                SharePhotoContent content = new SharePhotoContent.Builder()
-                        .addPhoto(photo)
-                        .build();
+        if (ShareDialog.canShow(SharePhotoContent.class)) {
+            SharePhoto photo = new SharePhoto.Builder()
+                    .setImageUrl(uri)
+                    .build();
+            SharePhotoContent content = new SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .build();
+            mShareDialog.show(content);
+        }
+    }
+
+    private void postFacebookVideo(Uri uri){
+        if (ShareDialog.canShow(ShareVideoContent.class)){
+            ShareVideo video = new ShareVideo.Builder()
+                    .setLocalUrl(uri)
+                    .build();
+            final ShareVideoContent content = new ShareVideoContent.Builder()
+                    .setVideo(video)
+                    .build();
+            mShareDialog.show(content, ShareDialog.Mode.WEB);
+        }else {
+            /*ShareApi.share(content, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                Log.d(TAG, "onSuccess: " + result.toString());
                 dialog.show(content);
             }
-        } catch (IOException e){
-            e.printStackTrace();
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "onCancel: ");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "onError: " + error.toString());
+            }
+        });*/
         }
     }
 
