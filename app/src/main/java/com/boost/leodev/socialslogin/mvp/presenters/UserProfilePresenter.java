@@ -39,4 +39,16 @@ public class UserProfilePresenter extends MvpPresenter<UserProfileView> {
         }
         getViewState().showUserData(user);
     }
+
+    public void startFilePicker(){
+        getViewState().startFilePickerIntent();
+    }
+
+    public void onActivityResult(String fileUri){
+
+    }
+
+    public void showMessage(String message){
+        getViewState().showMessage(message);
+    }
 }

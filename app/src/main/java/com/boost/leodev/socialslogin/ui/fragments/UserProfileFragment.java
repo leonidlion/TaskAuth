@@ -1,7 +1,9 @@
 package com.boost.leodev.socialslogin.ui.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -29,6 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.app.Activity.RESULT_OK;
+
 public class UserProfileFragment extends MvpAppCompatFragment implements UserProfileView {
     @InjectPresenter
     UserProfilePresenter mPresenter;
@@ -48,14 +52,14 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     @BindView(R.id.toolbar_actionbar)
     Toolbar mToolbar;
 
-    @OnClick(R.id.btn_out)
+    @OnClick({R.id.btn_out, R.id.btn_share_file})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.btn_out:
                 mPresenter.logOut();
                 break;
             case R.id.btn_share_file:
-
+                mPresenter.startFilePicker();
                 break;
         }
     }
@@ -107,6 +111,13 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     }
 
     @Override
+    public void startFilePickerIntent(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/* video/*");
+        startActivityForResult(intent, Constants.FILE_PICK_REQUEST_CODE);
+    }
+
+    @Override
     public void onLogout() {
         EventBus.getDefault().post(new EventMainChangeFragment(LoginFragment.newInstance()));
     }
@@ -115,4 +126,17 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     public void showMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.FILE_PICK_REQUEST_CODE && resultCode == RESULT_OK){
+            if (data.getData() != null){
+                mPresenter.onActivityResult(data.getData().toString());
+            }else {
+                mPresenter.showMessage(getString(R.string.data_null));
+            }
+        }
+    }
+
 }

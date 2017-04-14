@@ -7,4 +7,5 @@ public interface UserProfileView extends MvpView {
     void showUserData(User user);
     void onLogout();
     void showMessage(String message);
+    void startFilePickerIntent();
 }
