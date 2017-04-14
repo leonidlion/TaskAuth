@@ -67,6 +67,7 @@ public class LoginFragment extends MvpAppCompatFragment implements LoginView, Lo
         return view;
     }
 
+    // TODO: 14/04/17 do you need this?
     @Override
     public void changeFragment(User user, int socialHelperId){
         EventBus.getDefault().post(new EventMainChangeFragment(UserProfileFragment.newInstance(user, socialHelperId)));
