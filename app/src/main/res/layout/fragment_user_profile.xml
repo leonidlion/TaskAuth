@@ -54,6 +54,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/civ_profile_icon"
         android:layout_marginBottom="20dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_logout_24dp"
         style="?android:attr/borderlessButtonStyle"
         android:contentDescription="@string/btn_logout"/>

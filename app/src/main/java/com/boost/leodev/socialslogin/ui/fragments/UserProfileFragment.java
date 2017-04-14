@@ -3,6 +3,7 @@ package com.boost.leodev.socialslogin.ui.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.boost.leodev.socialslogin.Constants;
 import com.boost.leodev.socialslogin.R;
 import com.boost.leodev.socialslogin.event.EventMainChangeFragment;
 import com.boost.leodev.socialslogin.mvp.models.User;
@@ -40,6 +42,8 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     TextView mBirthDay;
     @BindView(R.id.btn_out)
     ImageButton mLogout;
+    @BindView(R.id.toolbar_actionbar)
+    Toolbar mToolbar;
 
     @OnClick(R.id.btn_out)
     public void onClick(){
@@ -65,10 +69,21 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
         View view = inflater.inflate(LAYOUT, container, false);
         ButterKnife.bind(this, view);
 
-        mPresenter.setProfileHelper(getArguments().getInt(ARGS_SOCIAL_HELPER));
+        int socialsId = getArguments().getInt(ARGS_SOCIAL_HELPER);
+
+        mPresenter.setProfileHelper(socialsId);
         mPresenter.getUser((User) getArguments().getParcelable(ARGS_USER));
 
+        changeToolbarTitle(socialsId);
+
         return view;
+    }
+
+    private void changeToolbarTitle(int socialsId){
+        if(socialsId == Constants.FACEBOOK_HELPER)
+            mToolbar.setTitle(getString(R.string.facebook_profile));
+        else
+            mToolbar.setTitle(getString(R.string.google_profile));
     }
 
     @Override

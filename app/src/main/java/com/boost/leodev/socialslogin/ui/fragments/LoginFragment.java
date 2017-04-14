@@ -20,7 +20,6 @@ import com.boost.leodev.socialslogin.helpers.login.LoginHelper;
 import com.boost.leodev.socialslogin.mvp.models.User;
 import com.boost.leodev.socialslogin.mvp.presenters.LoginPresenter;
 import com.boost.leodev.socialslogin.mvp.views.LoginView;
-import com.google.android.gms.common.SignInButton;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -36,7 +35,7 @@ public class LoginFragment extends MvpAppCompatFragment implements LoginView, Lo
     LoginPresenter mPresenter;
 
     @BindView(R.id.google_login)
-    SignInButton mGoogleLogin;
+    ImageButton mGoogleLogin;
     @BindView(R.id.fb_login)
     ImageButton mFbLogin;
 
