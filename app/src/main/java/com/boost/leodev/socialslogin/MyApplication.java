@@ -7,10 +7,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-/**
- * Created by leonid on 12.04.17.
- */
-
 public class MyApplication extends Application {
     private static MyApplication sMyApplication;
     private static GoogleApiClient sGoogleApiClient;

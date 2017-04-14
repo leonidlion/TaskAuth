@@ -4,4 +4,11 @@
     <string name="btn_logout">Logout</string>
     <string name="fb_login">Facebook login</string>
     <string name="google_login">Google login</string>
+    <string name="error_get_user_data">Error get user data</string>
+    <string name="google_profile">Google profile</string>
+    <string name="facebook_profile">Facebook profile</string>
+    <string name="share_file">Share file</string>
+    <string name="data_null">Invalid data</string>
+    <string name="permission_read">Allow permission for share file</string>
+    <string name="permission_setting">Settings</string>
 </resources>
