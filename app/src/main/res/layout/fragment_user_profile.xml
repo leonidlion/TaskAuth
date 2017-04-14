@@ -47,6 +47,16 @@
         android:layout_marginTop="35dp"
         tools:text="Date birthday"/>
 
+    <Button
+        android:id="@+id/btn_share_file"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_out"
+        android:layout_alignStart="@+id/btn_out"
+        android:layout_marginBottom="20dp"
+        android:text="@string/share_file"/>
+
     <ImageButton
         android:id="@+id/btn_out"
         android:layout_width="wrap_content"

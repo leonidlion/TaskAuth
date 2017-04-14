@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,12 +43,21 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     TextView mBirthDay;
     @BindView(R.id.btn_out)
     ImageButton mLogout;
+    @BindView(R.id.btn_share_file)
+    Button mShareFile;
     @BindView(R.id.toolbar_actionbar)
     Toolbar mToolbar;
 
     @OnClick(R.id.btn_out)
-    public void onClick(){
-        mPresenter.logOut();
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.btn_out:
+                mPresenter.logOut();
+                break;
+            case R.id.btn_share_file:
+
+                break;
+        }
     }
 
     private static final int LAYOUT = R.layout.fragment_user_profile;
