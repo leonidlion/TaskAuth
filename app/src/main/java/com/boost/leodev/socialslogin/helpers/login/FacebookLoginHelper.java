@@ -19,7 +19,6 @@ import com.facebook.login.LoginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 public class FacebookLoginHelper extends LoginHelper {
@@ -32,8 +31,8 @@ public class FacebookLoginHelper extends LoginHelper {
     @Override
     public void init() {
         mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().logInWithReadPermissions(mFragment,
-                Arrays.asList("public_profile", "email"));
+        LoginManager.getInstance().logInWithPublishPermissions(mFragment,
+                Collections.singletonList("publish_actions"));
     }
 
     @Override
@@ -64,7 +63,6 @@ public class FacebookLoginHelper extends LoginHelper {
                 mCallback.onError(error.getMessage());
             }
         });
-        LoginManager.getInstance().logInWithPublishPermissions(mFragment, Collections.singletonList("publish_actions"));
     }
 
     @Override
