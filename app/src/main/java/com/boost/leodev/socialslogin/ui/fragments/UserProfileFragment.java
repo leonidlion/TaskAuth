@@ -101,6 +101,8 @@ public class UserProfileFragment extends MvpAppCompatFragment implements UserPro
     };
 
 
+    // TODO: 14/04/17 check where you need to create new instance
+    // TODO: 14/04/17 start fragment only with  socialHelper, load user inside
     public static UserProfileFragment newInstance(User user, int socialHelper){
         Bundle args = new Bundle();
         args.putParcelable(ARGS_USER, user);

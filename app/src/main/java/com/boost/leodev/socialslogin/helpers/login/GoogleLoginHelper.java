@@ -19,6 +19,7 @@ public class GoogleLoginHelper extends LoginHelper {
 
     @Override
     public void init() {
+        // TODO: 14/04/17 what if error when connect google api client
         if (!MyApplication.getGoogleApiClient().isConnected())
             MyApplication.getGoogleApiClient().connect();
     }
@@ -33,6 +34,7 @@ public class GoogleLoginHelper extends LoginHelper {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.GOOGLE_REQUEST_CODE){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            // TODO: 14/04/17 what if error while log in?
             if (result.isSuccess()) {
                 mCallback.onResultSuccess(getUserFromGoogle(result.getSignInAccount()));
             }

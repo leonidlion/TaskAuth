@@ -40,4 +40,20 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                 .setCustomAnimations(R.anim.enter_anim, R.anim.exit_anim)
                 .replace(CONTAINER, changeFragment.getFragment()).commit();
     }
+
+
+    /*
+        abstract LoginHelper with methods init(), doLogin(), onActivityResult(), ...
+        GoogleLoginHelper(Context) & FacebookLoginHelper(Context) implement this class
+        LoginPresenter(LoginHelper google, LoginHelper facebook)
+
+        set UserProfileFragment with social constant (Facebook, Google)
+
+        in UserProfileFragment get user info from selected social use
+        abstract UserProfileHelper with getUser(), logout()
+
+        GoogleUserProfileHelper & FacebookUserProfileHelper extend UserProfileHelper
+        and go on/
+
+     */
 }
